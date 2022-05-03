@@ -32,7 +32,6 @@ async function run() {
             const query = {}
             const cursor = productsCollection.find(query);
             const result = await cursor.toArray()
-            console.log(result)
             res.send(result)
         })
 
@@ -40,7 +39,6 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const product = await productsCollection.findOne(query)
-            console.log(product)
             res.send(product)
         })
     }
