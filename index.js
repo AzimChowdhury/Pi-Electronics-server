@@ -73,6 +73,3 @@ async function run() {
 }
 
 run().catch(console.dir)
-
-// userName= pi-electronics
-// pass= XAFnfB1mplBtGJ1r
