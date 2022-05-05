@@ -23,11 +23,14 @@ async function run() {
             res.send('server running');
         })
 
+        //add a product
         app.post('/products', async (req, res) => {
             const result = await productsCollection.insertOne(req.body)
             res.send(result)
         })
 
+
+        //find all product
         app.get('/products', async (req, res) => {
             const query = {}
             const cursor = productsCollection.find(query);
@@ -35,6 +38,23 @@ async function run() {
             res.send(result)
         })
 
+        //update a product
+        app.put('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedProduct = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    price: updatedProduct.newPrice,
+                    quantity: updatedProduct.newQuantity
+                }
+            };
+            const result = await productsCollection.updateOne(filter, updateDoc, options);
+            res.send(result)
+        })
+
+        //find a product by id 
         app.get('/product/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
