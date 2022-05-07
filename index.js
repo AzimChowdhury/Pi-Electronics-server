@@ -13,19 +13,19 @@ app.use(express.json());
 
 
 
-const verifyJWTtoken = (req,res,next) =>{
-    const header =req.headers.authorization;
+const verifyJWTtoken = (req, res, next) => {
+    const header = req.headers.authorization;
     if (!header) {
-        return res.status(401).send({message: 'Unauthorized Access'})
+        return res.status(401).send({ message: 'Unauthorized Access' })
     }
     const token = header.split(' ')[1]
-    jwt.verify(token, process.env.ACCESS_TOKEN, (error,decoded)=>{
-        if(error){
-            return res.status(403).send({message:'Forbidden'})
+    jwt.verify(token, process.env.ACCESS_TOKEN, (error, decoded) => {
+        if (error) {
+            return res.status(403).send({ message: 'Forbidden' })
         }
-        req.decoded =decoded;
+        req.decoded = decoded;
     })
-    
+
     next();
 }
 
@@ -58,6 +58,9 @@ async function run() {
             res.send(result)
         })
 
+
+
+
         //update a product
         app.put('/product/:id', async (req, res) => {
             const id = req.params.id;
@@ -85,19 +88,19 @@ async function run() {
 
 
         //find my products for specific user
-        app.get('/product', verifyJWTtoken, async (req, res)=>{
+        app.get('/product', verifyJWTtoken, async (req, res) => {
             const verifiedEmail = req.decoded.email;
             const email = req.query.email;
             if (verifiedEmail === email) {
-                const query = {email:email}
-                const cursor =  productsCollection.find(query)
-                const myProducts= await cursor.toArray();
+                const query = { email: email }
+                const cursor = productsCollection.find(query)
+                const myProducts = await cursor.toArray();
                 res.send(myProducts)
             }
-            else{
-                res.status(403).send({message:'forbidden'})
+            else {
+                res.status(403).send({ message: 'forbidden' })
             }
-            
+
         })
 
 
@@ -108,6 +111,15 @@ async function run() {
             const product = await productsCollection.findOne(query)
             res.send(product)
         })
+
+        //delete a product by id 
+        app.delete('/product/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await productsCollection.deleteOne(query)
+            res.send(result)
+        })
+
     }
     finally {
         // await client.close();
