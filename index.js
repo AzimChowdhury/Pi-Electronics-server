@@ -92,7 +92,7 @@ async function run() {
 
         //find my products for specific user
         app.get('/product', verifyJWTtoken, async (req, res) => {
-            const verifiedEmail = req.decoded.email;
+            const verifiedEmail = req?.decoded?.email;
             const email = req.query.email;
 
             const query = { email: email }
