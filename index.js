@@ -42,6 +42,7 @@ async function run() {
     try {
         await client.connect();
         const productsCollection = client.db('pi-electronics').collection('products');
+        
         app.get('/', async (req, res) => {
             res.send('server is running ');
         })
@@ -91,7 +92,7 @@ async function run() {
 
 
         //find my products for specific user
-        app.get('/product', verifyJWTtoken, async (req, res) => {
+        app.get('/product', async (req, res) => {
             const verifiedEmail = req?.decoded?.email;
             const email = req.query.email;
 
@@ -124,6 +125,8 @@ async function run() {
     finally {
         // await client.close();
     }
+
+
     app.listen(port, () => {
         console.log('server running on the port ', port);
     })
